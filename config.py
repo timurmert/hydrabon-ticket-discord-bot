@@ -19,35 +19,41 @@ YETKILI_ROLLERI = {
 
 # Ticket kategorileri
 TICKET_KATEGORILERI = {
-    "teknik-destek": {
-        "label": "Teknik Destek",
-        "kisaltma": "TD",
-        "emoji": "\U0001f527",
-        "aciklama": "Teknik sorunlar için destek talebi",
-    },
-    "sikayet": {
-        "label": "Şikayet",
-        "kisaltma": "SK",
-        "emoji": "\u26a0\ufe0f",
-        "aciklama": "Şikayet bildirimi",
-    },
-    "oneri": {
-        "label": "Öneri",
-        "kisaltma": "ON",
-        "emoji": "\U0001f4a1",
-        "aciklama": "Öneri ve geri bildirim",
-    },
     "genel-destek": {
         "label": "Genel Destek",
         "kisaltma": "GD",
         "emoji": "\U0001f4cb",
-        "aciklama": "Genel destek talepleri",
+        "aciklama": "Genel sorular ve destek talepleri",
     },
-    "basvuru": {
-        "label": "Başvuru",
-        "kisaltma": "BV",
-        "emoji": "\U0001f4dd",
-        "aciklama": "Başvuru işlemleri",
+    "discord": {
+        "label": "Discord",
+        "kisaltma": "DC",
+        "emoji": "\U0001f4ac",
+        "aciklama": "Discord sunucusu ile ilgili talepler",
+    },
+    "arge-yazilim": {
+        "label": "AR-GE / Yaz\u0131l\u0131m",
+        "kisaltma": "AY",
+        "emoji": "\U0001f4bb",
+        "aciklama": "AR-GE ve yaz\u0131l\u0131m ile ilgili talepler",
+    },
+    "reklam": {
+        "label": "Reklam",
+        "kisaltma": "RK",
+        "emoji": "\U0001f4e2",
+        "aciklama": "Reklam talepleri ve ba\u015fvurular\u0131",
+    },
+    "sponsorluk": {
+        "label": "Sponsorluk & \u0130\u015f Birli\u011fi",
+        "kisaltma": "SB",
+        "emoji": "\U0001f91d",
+        "aciklama": "Sponsorluk ve i\u015f birli\u011fi teklifleri",
+    },
+    "diger": {
+        "label": "Di\u011fer",
+        "kisaltma": "DG",
+        "emoji": "\U0001f4cc",
+        "aciklama": "Di\u011fer konulardaki talepler",
     },
 }
 

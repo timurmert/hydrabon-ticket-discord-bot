@@ -231,19 +231,6 @@ async def create_new_ticket(interaction: discord.Interaction, category_key: str)
 
     await channel.send(embed=embed, view=TicketActionsView())
 
-    # Log kaydı
-    await log_action(
-        guild.id,
-        "Ticket Oluşturuldu",
-        f"Yeni bir ticket ({ticket_id}) oluşturuldu.",
-        discord.Color.green(),
-        [
-            ("Kullanıcı", f"{interaction.user.mention} ({interaction.user.id})", True),
-            ("Kanal", channel.mention, True),
-            ("Kategori", kategori["label"], False),
-        ],
-    )
-
     return channel
 
 
@@ -348,23 +335,9 @@ async def close_ticket(interaction: discord.Interaction, transcript=None):
             )
 
             try:
-                # Önce embed, ardından transcript dosyası
-                await log_channel.send(embed=info_embed)
-                await log_channel.send(file=transcript_file)
+                await log_channel.send(embed=info_embed, file=transcript_file)
             except Exception as e:
                 print(f"Transcript gönderilemedi: {e}")
-
-    await log_action(
-        interaction.guild.id,
-        "Ticket Kapatıldı",
-        f"Ticket ({ticket_id}) kapatıldı.",
-        discord.Color.red(),
-        [
-            ("Kapatılan Kanal", f"#{channel.name}", True),
-            ("Kapatan Kullanıcı", f"{interaction.user.mention} ({interaction.user.id})", True),
-            ("Ticket Sahibi", f"<@{ticket_owner_id}>", True),
-        ],
-    )
 
     await asyncio.sleep(5)
     await channel.delete()
