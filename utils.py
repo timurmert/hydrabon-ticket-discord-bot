@@ -220,8 +220,8 @@ async def create_new_ticket(interaction: discord.Interaction, category_key: str)
         description=(
             f"**Kategori:** {kategori['label']}\n\n"
             f"Merhaba {interaction.user.mention}, destek talebiniz oluşturuldu.\n\n"
-            f"\u23f0 **Bu ticket, son mesajdan 24 saat sonra mesaj atılmamışsa otomatik olarak silinecektir.**\n"
-            f"\U0001f465 **Yetkililerden müsait olan birisi en kısa sürede talebinize bakacaktır.**\n\n"
+            f"\U0001f465 **Yetkililerden müsait olan birisi en kısa sürede talebinize bakacaktır.**\n"
+            f"\u23f0 **Bu ticket, son mesajdan 24 saat sonra mesaj atılmamışsa otomatik olarak silinecektir.**\n\n"
             f"Lütfen sorununuzu bu kanalda detaylı bir şekilde açıklayın."
         ),
         color=discord.Color.green(),
