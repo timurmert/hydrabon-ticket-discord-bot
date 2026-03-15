@@ -31,14 +31,18 @@ class TicketCategorySelect(ui.Select):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
-
         category_key = self.values[0]
+
+        # Paneli sıfırla: select menu'yü yeni bir view ile güncelle
+        await interaction.response.edit_message(view=TicketSelectView())
+
         channel = await create_new_ticket(interaction, category_key)
 
         if channel:
+            kategori = TICKET_KATEGORILERI[category_key]
             await interaction.followup.send(
-                f"Ticket'ınız oluşturuldu: {channel.mention}", ephemeral=True
+                f"{kategori['emoji']} Ticket'ınız oluşturuldu! {channel.mention} kanalına yönlendiriliyorsunuz.",
+                ephemeral=True,
             )
         else:
             await interaction.followup.send(
