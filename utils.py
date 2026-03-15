@@ -6,6 +6,20 @@ import io
 from config import YETKILI_ROLLERI, TICKET_KATEGORILERI, TURKEY_TIMEZONE
 from database import get_db_connection
 
+# Bot referansı - circular import olmadan ticket1.py'den set edilir
+_bot = None
+
+
+def set_bot(bot_instance):
+    """Bot referansını ayarlar. ticket1.py'den çağrılır."""
+    global _bot
+    _bot = bot_instance
+
+
+def get_bot():
+    """Bot referansını döndürür."""
+    return _bot
+
 
 def get_admin_role_ids():
     """YETKILI_ROLLERI dict'inden tüm rol ID'lerini döndürür."""
@@ -20,7 +34,9 @@ def is_admin(member: discord.Member) -> bool:
 
 async def log_action(guild_id, title, description, color, fields=None):
     """Log kanalına embed mesaj gönderir."""
-    from ticket1 import bot
+    bot = get_bot()
+    if not bot:
+        return
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -276,21 +292,46 @@ async def close_ticket(interaction: discord.Interaction, transcript=None):
     conn.close()
 
     # Kapanış mesajı
-    embed = discord.Embed(
+    close_embed = discord.Embed(
         title="Ticket Kapatılıyor",
         description=f"Bu ticket {interaction.user.mention} tarafından kapatıldı.\nKanal 5 saniye içinde silinecek.",
         color=discord.Color.red(),
         timestamp=datetime.datetime.now(TURKEY_TIMEZONE),
     )
 
-    await interaction.followup.send(embed=embed)
+    await interaction.followup.send(embed=close_embed)
 
-    # Transcript log
+    # Transcript log kanalına gönder
     if transcript and log_channel_id:
         log_channel = interaction.guild.get_channel(log_channel_id)
         if log_channel:
             kategori_label = TICKET_KATEGORILERI.get(category_key, {}).get("label", category_key)
 
+            # Önce bilgi embed'i gönder
+            info_embed = discord.Embed(
+                title=f"\U0001f4cb Ticket Kapatıldı: {ticket_id}",
+                color=discord.Color.red(),
+                timestamp=datetime.datetime.now(TURKEY_TIMEZONE),
+            )
+            info_embed.add_field(name="Ticket ID", value=ticket_id, inline=True)
+            info_embed.add_field(name="Kategori", value=kategori_label, inline=True)
+            info_embed.add_field(
+                name="Ticket Sahibi", value=f"<@{ticket_owner_id}>", inline=True
+            )
+            info_embed.add_field(
+                name="Kapatan Kullanıcı",
+                value=f"{interaction.user.mention} ({interaction.user.id})",
+                inline=True,
+            )
+            info_embed.add_field(name="Kanal", value=f"#{channel.name}", inline=True)
+            info_embed.add_field(
+                name="Kapatılma Tarihi",
+                value=datetime.datetime.now(TURKEY_TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
+                inline=True,
+            )
+            info_embed.set_footer(text="HydRaboN Ticket Sistemi")
+
+            # Transcript dosyası oluştur
             transcript_content = f"# Ticket Transcript: {ticket_id}\n"
             transcript_content += f"# Kategori: {kategori_label}\n"
             transcript_content += f"# Ticket Sahibi: <@{ticket_owner_id}>\n"
@@ -307,9 +348,9 @@ async def close_ticket(interaction: discord.Interaction, transcript=None):
             )
 
             try:
-                await log_channel.send(
-                    content=f"Ticket {ticket_id} kapatıldı. İşte transcript:", file=transcript_file
-                )
+                # Önce embed, ardından transcript dosyası
+                await log_channel.send(embed=info_embed)
+                await log_channel.send(file=transcript_file)
             except Exception as e:
                 print(f"Transcript gönderilemedi: {e}")
 
@@ -333,7 +374,9 @@ async def close_ticket(interaction: discord.Interaction, transcript=None):
 
 async def auto_close_ticket(ticket_id, user_id, channel_id, category_key):
     """24 saat inaktif olan ticket'ı otomatik kapatır."""
-    from ticket1 import bot
+    bot = get_bot()
+    if not bot:
+        return
 
     conn = get_db_connection()
     cursor = conn.cursor()

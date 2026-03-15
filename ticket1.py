@@ -9,7 +9,7 @@ from config import TURKEY_TIMEZONE, INACTIVITY_HOURS, CHECK_INTERVAL_HOURS
 from database import create_database, get_db_connection
 from views import TicketSelectView, TicketActionsView
 from commands import setup_commands
-from utils import auto_close_ticket
+from utils import auto_close_ticket, set_bot
 
 # .env dosyasını yükle
 load_dotenv()
@@ -20,6 +20,9 @@ intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+
+# Bot referansını utils modülüne aktar (circular import önlemi)
+set_bot(bot)
 
 
 @bot.event
