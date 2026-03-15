@@ -20,7 +20,7 @@ def is_admin(member: discord.Member) -> bool:
 
 async def log_action(guild_id, title, description, color, fields=None):
     """Log kanalına embed mesaj gönderir."""
-    from bot import bot
+    from ticket1 import bot
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -333,7 +333,7 @@ async def close_ticket(interaction: discord.Interaction, transcript=None):
 
 async def auto_close_ticket(ticket_id, user_id, channel_id, category_key):
     """24 saat inaktif olan ticket'ı otomatik kapatır."""
-    from bot import bot
+    from ticket1 import bot
 
     conn = get_db_connection()
     cursor = conn.cursor()
